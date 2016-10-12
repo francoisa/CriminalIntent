@@ -19,6 +19,7 @@ import java.util.List;
 public class CrimeListFragment extends Fragment {
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
+    private int mPosition;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup contatiner,
@@ -43,8 +44,17 @@ public class CrimeListFragment extends Fragment {
     private void updateUI() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         List<Crime> crimes = crimeLab.getCrimes();
-        mAdapter = new CrimeAdapter(crimes);
-        mCrimeRecyclerView.setAdapter(mAdapter);
+        if (mAdapter == null) {
+            mAdapter = new CrimeAdapter(crimes);
+            mCrimeRecyclerView.setAdapter(mAdapter);
+        }
+        else {
+            mAdapter.notifyItemChanged(mPosition);
+        }
+    }
+
+    private void setPosition(int position) {
+        mPosition = position;
     }
 
     private class CrimeHolder extends RecyclerView.ViewHolder
@@ -54,6 +64,7 @@ public class CrimeListFragment extends Fragment {
         private TextView mDateTextView;
         private CheckBox mSolvedCheckBox;
         private Crime mCrime;
+        private int mPosition;
 
         public CrimeHolder(View itemView) {
             super(itemView);
@@ -63,8 +74,9 @@ public class CrimeListFragment extends Fragment {
             mSolvedCheckBox = (CheckBox) itemView.findViewById(R.id.list_item_crime_solved_check_box);
         }
 
-        public void bindCrime(Crime crime) {
+        public void bindCrime(Crime crime, int position) {
             mCrime = crime;
+            mPosition = position;
             mTitleTextView.setText(mCrime.getTitle());
             mDateTextView.setText(mCrime.getDate().toString());
             mSolvedCheckBox.setChecked(mCrime.isSolved());
@@ -73,6 +85,7 @@ public class CrimeListFragment extends Fragment {
         @Override
         public void onClick(View v) {
             Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getId());
+            setPosition(mPosition);
             startActivity(intent);
         }
     }
@@ -95,7 +108,7 @@ public class CrimeListFragment extends Fragment {
         @Override
         public void onBindViewHolder(CrimeHolder holder, int position) {
             Crime crime = mCrimes.get(position);
-            holder.bindCrime(crime);
+            holder.bindCrime(crime, position);
         }
 
         @Override
