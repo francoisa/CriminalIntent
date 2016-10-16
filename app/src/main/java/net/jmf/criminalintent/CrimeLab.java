@@ -6,9 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Created by amodu on 10/9/2016.
- */
 
 public class CrimeLab {
     private List<Crime> mCrimes;
@@ -23,12 +20,10 @@ public class CrimeLab {
 
     private CrimeLab(Context context) {
         mCrimes = new ArrayList<>();
-        for (int i = 0; i < 50; ++i) {
-            Crime crime = new Crime();
-            crime.setTitle("Crime # " + i);
-            crime.setSolved((i%2) == 0);
-            mCrimes.add(crime);
-        }
+    }
+
+    public void addCrime(Crime c) {
+        mCrimes.add(c);
     }
 
     public List<Crime> getCrimes() {
