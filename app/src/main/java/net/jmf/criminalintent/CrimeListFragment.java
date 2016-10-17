@@ -19,13 +19,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.UUID;
 
 
 public class CrimeListFragment extends Fragment {
     private static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
-    private int mPosition;
+    private UUID mCrimeId;
     private boolean mSubtitleVisible;
 
     @Override
@@ -83,6 +84,7 @@ public class CrimeListFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.menu_item_new_crime:
                 Crime crime = new Crime();
+                mCrimeId = crime.getId();
                 CrimeLab.get(getActivity()).addCrime(crime);
                 Intent intent = CrimePagerActivity
                         .newIntent(getActivity(), crime.getId());
@@ -102,7 +104,7 @@ public class CrimeListFragment extends Fragment {
     private void updateSubtitle() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         int crimeCount = crimeLab.getCrimes().size();
-        String subtitle = getString(R.string.subtitle_format, crimeCount);
+        String subtitle = getString(R.string.subtitle_format, String.valueOf(crimeCount));
 
         if (!mSubtitleVisible) {
             subtitle = null;
@@ -120,13 +122,23 @@ public class CrimeListFragment extends Fragment {
             mCrimeRecyclerView.setAdapter(mAdapter);
         }
         else {
-            mAdapter.notifyItemChanged(mPosition);
+            for (int i = 0; i < crimes.size(); ++i) {
+                if (crimes.get(i).getId().equals(mCrimeId)) {
+                    if (crimes.get(i).isDelete()) {
+                        crimes.remove(i);
+                        mAdapter.notifyItemRemoved(i);
+                    }
+                    else {
+                        mAdapter.notifyItemChanged(i);
+                    }
+                }
+            }
         }
         updateSubtitle();
     }
 
-    private void setPosition(int position) {
-        mPosition = position;
+    private void setCrimeId(UUID crimeId) {
+        mCrimeId = crimeId;
     }
 
     private class CrimeHolder extends RecyclerView.ViewHolder
@@ -136,7 +148,6 @@ public class CrimeListFragment extends Fragment {
         private TextView mDateTextView;
         private CheckBox mSolvedCheckBox;
         private Crime mCrime;
-        private int mPosition;
 
         public CrimeHolder(View itemView) {
             super(itemView);
@@ -148,7 +159,6 @@ public class CrimeListFragment extends Fragment {
 
         public void bindCrime(Crime crime, int position) {
             mCrime = crime;
-            mPosition = position;
             mTitleTextView.setText(mCrime.getTitle());
             mDateTextView.setText(DateFormat.format("MMM dd, yyyy h:mm a", mCrime.getDate()));
             mSolvedCheckBox.setChecked(mCrime.isSolved());
@@ -157,7 +167,7 @@ public class CrimeListFragment extends Fragment {
         @Override
         public void onClick(View v) {
             Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
-            setPosition(mPosition);
+            mCrimeId =  mCrime.getId();
             startActivity(intent);
         }
     }

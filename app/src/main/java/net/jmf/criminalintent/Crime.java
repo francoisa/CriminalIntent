@@ -8,6 +8,15 @@ public class Crime {
     private String mTitle;
     private Date mDate;
     private boolean mSolved;
+    private boolean mDelete;
+
+    public boolean isDelete() {
+        return mDelete;
+    }
+
+    public void setDelete(boolean delete) {
+        mDelete = delete;
+    }
 
     public UUID getId() {
         return mId;
@@ -40,5 +49,6 @@ public class Crime {
     public Crime() {
         mId = UUID.randomUUID();
         mDate = new Date();
+        mDelete = false;
     }
 }

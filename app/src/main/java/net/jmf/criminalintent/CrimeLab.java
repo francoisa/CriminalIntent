@@ -26,6 +26,14 @@ public class CrimeLab {
         mCrimes.add(c);
     }
 
+    public void removeDeletedCrimes() {
+        for (Crime crime : mCrimes) {
+            if (crime.isDelete()) {
+                mCrimes.remove(crime);
+            }
+        }
+    }
+
     public List<Crime> getCrimes() {
         return mCrimes;
     }

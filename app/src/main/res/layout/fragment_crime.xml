@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical">
@@ -15,6 +16,31 @@
         android:layout_height="wrap_content"
         android:id="@+id/crime_title"
         android:hint="@string/crime_title_hint"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:weightSum="1">
+
+        <CheckBox
+            android:id="@+id/crime_solved"
+            android:layout_width="253dp"
+            android:layout_height="52dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:text="@string/crime_solved_label"
+            android:layout_weight="0.67"/>
+
+        <ImageButton
+            android:layout_width="44dp"
+            android:layout_height="36dp"
+            app:srcCompat="@mipmap/ic_delete_btn"
+            android:id="@+id/delete_crime"
+            />
+
+    </LinearLayout>
 
     <TextView
         android:text="@string/crime_details_label"
@@ -45,12 +71,4 @@
 
     </LinearLayout>
 
-    <CheckBox
-        android:id="@+id/crime_solved"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:text="@string/crime_solved_label"
-        />
 </LinearLayout>
