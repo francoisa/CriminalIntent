@@ -23,6 +23,7 @@ import java.util.UUID;
 
 public class CrimeFragment extends Fragment {
     private static final String ARG_CRIME_ID = "crime_id";
+    private static final String ARG_SHOW_DELETE_BTN = "show_delete_btn";
     private static final String DIALOG_DATE = "DialogDate";
     private static final String DIALOG_TIME = "DialogTime";
 
@@ -35,10 +36,12 @@ public class CrimeFragment extends Fragment {
     private Button mTimeButton;
     private CheckBox mSolvedCheckBox;
     private ImageButton mDeleteButton;
+    private boolean mShowDeleteButton;
 
-    public static CrimeFragment newInstance(UUID crimeId) {
+    public static CrimeFragment newInstance(UUID crimeId, boolean showDeleteButon) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_CRIME_ID, crimeId);
+        args.putBoolean(ARG_SHOW_DELETE_BTN, showDeleteButon);
 
         CrimeFragment fragment = new CrimeFragment();
         fragment.setArguments(args);
@@ -58,6 +61,9 @@ public class CrimeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         UUID crimeId = (UUID) getArguments()
                 .getSerializable(ARG_CRIME_ID);
+        mShowDeleteButton = getArguments()
+                .getBoolean(ARG_SHOW_DELETE_BTN);
+
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
 
     }
@@ -122,13 +128,19 @@ public class CrimeFragment extends Fragment {
         });
 
         mDeleteButton = (ImageButton) v.findViewById(R.id.delete_crime);
-        mDeleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCrime.setDelete(true);
-                getActivity().finish();
-            }
-        });
+        if (mShowDeleteButton) {
+            mDeleteButton.setVisibility(View.VISIBLE);
+            mDeleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mCrime.setDelete(true);
+                    getActivity().finish();
+                }
+            });
+        }
+        else {
+            mDeleteButton.setVisibility(View.INVISIBLE);
+        }
         return v;
     }
 

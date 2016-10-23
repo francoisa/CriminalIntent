@@ -16,13 +16,16 @@ import java.util.UUID;
 public class CrimePagerActivity extends AppCompatActivity {
     public static final String EXTRA_CRIME_ID =
             "net.jmf.criminalintent.crime_id";
+    public static final String SHOW_DELETE_BTN =
+            "net.jmf.criminalintent.show_delete_button";
 
     private ViewPager mViewPager;
     private List<Crime> mCrimes;
 
-    public static Intent newIntent(Context packageContext, UUID crimeId) {
+    public static Intent newIntent(Context packageContext, UUID crimeId, boolean showDeleteButton) {
         Intent intent = new Intent(packageContext, CrimePagerActivity.class);
         intent.putExtra(EXTRA_CRIME_ID, crimeId);
+        intent.putExtra(SHOW_DELETE_BTN, new Boolean(showDeleteButton));
         return intent;
     }
 
@@ -34,6 +37,9 @@ public class CrimePagerActivity extends AppCompatActivity {
         UUID crimeId = (UUID) getIntent()
                 .getSerializableExtra(EXTRA_CRIME_ID);
 
+        final Boolean showDeleteButton = (Boolean) getIntent()
+                .getSerializableExtra(SHOW_DELETE_BTN);
+
         mViewPager = (ViewPager) findViewById(R.id.activity_crime_view_pager);
 
         mCrimes = CrimeLab.get(this).getCrimes();
@@ -42,7 +48,7 @@ public class CrimePagerActivity extends AppCompatActivity {
             @Override
             public Fragment getItem(int position) {
                 Crime crime = mCrimes.get(position);
-                return CrimeFragment.newInstance(crime.getId());
+                return CrimeFragment.newInstance(crime.getId(), showDeleteButton);
             }
 
             @Override
