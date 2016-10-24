@@ -136,16 +136,8 @@ public class CrimeListFragment extends Fragment {
             mCrimeRecyclerView.setAdapter(mAdapter);
         }
         else {
-            for (int i = 0; i < crimes.size(); ++i) {
-                if (crimes.get(i).getId().equals(mCrimeId)) {
-                    if (crimes.get(i).isDelete()) {
-                        crimes.remove(i);
-                        mAdapter.notifyItemRemoved(i);
-                    } else {
-                        mAdapter.notifyItemChanged(i);
-                    }
-                }
-            }
+            mAdapter.setCrimes(crimes);
+            mAdapter.notifyDataSetChanged();
         }
         if (crimes.isEmpty()) {
             mCreateCrimeView.setVisibility(View.VISIBLE);
@@ -217,6 +209,10 @@ public class CrimeListFragment extends Fragment {
         @Override
         public int getItemCount() {
             return mCrimes.size();
+        }
+
+        public void setCrimes(List<Crime> crimes) {
+            mCrimes = crimes;
         }
     }
 }
