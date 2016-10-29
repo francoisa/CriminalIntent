@@ -9,6 +9,19 @@ public class Crime {
     private Date mDate;
     private boolean mSolved;
     private boolean mDelete;
+    private String mSuspect;
+
+    public String getSuspect() {
+        return mSuspect;
+    }
+
+    public void setSuspect(String suspect) {
+        mSuspect = suspect;
+    }
+
+    public void setId(UUID id) {
+        mId = id;
+    }
 
     public boolean isDelete() {
         return mDelete;
